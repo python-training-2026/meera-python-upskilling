@@ -1,0 +1,85 @@
+class BankAccount:
+    def __init__(self, name, balance, pin):
+        self.name = name
+        self.__balance = balance  
+        self.__pin = pin           
+        self.__is_locked = False
+
+    # Login method with max 3 attempts
+    def login(self):
+        if self.__is_locked:
+            print("Account is locked. Contact bank.")
+            return False
+
+        attempts = 3
+        while attempts > 0:
+            entered_pin = input("Enter your PIN: ")
+
+            if entered_pin == self.__pin:
+                print("Login successful!\n")
+                return True
+            else:
+                attempts -= 1
+                print(f"Incorrect PIN! Attempts left: {attempts}")
+
+        self.__is_locked = True
+        print("Account locked due to 3 failed attempts!")
+        return False
+
+    # Check balance
+    def check_balance(self):
+        print(f"Current Balance: ₹{self.__balance}")
+
+    # Deposit money
+    def deposit(self):
+        amount = float(input("Enter amount to deposit: ₹"))
+        if amount > 0:
+            self.__balance += amount
+            print(f"₹{amount} deposited successfully!")
+        else:
+            print("Invalid amount!")
+
+    # Withdraw money
+    def withdraw(self):
+        amount = float(input("Enter amount to withdraw: ₹"))
+        if amount <= 0:
+            print("Invalid amount!")
+        elif amount > self.__balance:
+            print("Insufficient balance!")
+        else:
+            self.__balance -= amount
+            print(f"₹{amount} withdrawn successfully!")
+
+
+# Child class ATM
+class ATM(BankAccount):
+
+    def menu(self):
+        while True:
+            print("\n----- ATM MENU -----")
+            print("1. Check Balance")
+            print("2. Deposit")
+            print("3. Withdraw")
+            print("4. Exit")
+
+            choice = input("Enter your choice: ")
+
+            if choice == "1":
+                self.check_balance()
+            elif choice == "2":
+                self.deposit()
+            elif choice == "3":
+                self.withdraw()
+            elif choice == "4":
+                print("Thank you for using ATM!")
+                break
+            else:
+                print("Invalid choice! Please try again.")
+
+
+# Create object
+atm_user = ATM("Meera", 5000, "1234")
+
+# user login
+if atm_user.login():
+    atm_user.menu()
